@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Tech Company - خدمات الطباعة ثلاثية الأبعاد</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Cairo -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Three.js & STLLoader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0284c7',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 glass-effect border-b border-slate-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-800 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+          <i class="fa-solid font-bold text-2xl fa-cube"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold text-slate-900 tracking-wide">Nexus Tech</h1>
+          <p class="text-xs text-sky-600 font-semibold">Company for 3D Printing</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#order-section" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-md transition-all duration-200">
+          طلب جديد <i class="fa-solid fa-arrow-left mr-1"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white py-14 px-4 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-400/30 text-sky-300 text-xs font-semibold mb-4">
+        🚀 منصة الطباعة ثلاثية الأبعاد الاحترافية
+      </span>
+      <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">
+        حول أفكارك وتصميماتك إلى واقع مع <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400">Nexus Tech</span>
+      </h2>
+      <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-6">
+        قم برفع ملف الـ 3D (STL)، اختار الخامة واللون المفضل لديك، واحسب التكلفة فورياً بدقة متناهية.
+      </p>
+      <div class="flex flex-wrap justify-center gap-6 text-xs md:text-sm font-medium text-slate-300">
+        <div class="flex items-center gap-2 bg-slate-800/80 px-4 py-2 rounded-lg border border-slate-700">
+          <i class="fa-solid fa-weight-hanging text-sky-400"></i> خامات عالية الجودة (PLA / PETG)
+        </div>
+        <div class="flex items-center gap-2 bg-slate-800/80 px-4 py-2 rounded-lg border border-slate-700">
+          <i class="fa-solid fa-tag text-emerald-400"></i> سعر الجرام 3 ج.م فقط
+        </div>
+        <div class="flex items-center gap-2 bg-slate-800/80 px-4 py-2 rounded-lg border border-slate-700">
+          <i class="fa-solid fa-truck-fast text-amber-400"></i> شحن سريع لكافة المحافظات
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Calculator & Order Section -->
+  <main id="order-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left Column: STL Viewer & Upload (7 cols) -->
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col h-full">
+          <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-eye text-sky-600"></i> معاينة المجسم ثلاثي الأبعاد
+            </h3>
+            <span id="file-status" class="text-xs px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 font-medium">
+              في انتظار رفع الملف
+            </span>
+          </div>
+
+          <!-- 3D Canvas Container -->
+          <div class="relative w-full h-80 md:h-[400px] bg-slate-900 flex items-center justify-center overflow-hidden" id="canvas-container">
+            <canvas id="stl-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+            
+            <!-- Default Placeholder Info -->
+            <div id="canvas-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 p-6 text-center pointer-events-none">
+              <i class="fa-solid fa-cube text-5xl mb-3 text-slate-600 animate-bounce"></i>
+              <p class="font-semibold text-slate-300">قم برفع ملف STL لمعاينته هنا ثلاثي الأبعاد</p>
+              <p class="text-xs text-slate-500 mt-1">يمكنك تدوير وتحريك المجسم بعد الرفع</p>
+            </div>
+
+            <!-- Dimensions Badge -->
+            <div id="dims-badge" class="hidden absolute bottom-3 right-3 bg-slate-800/90 text-white text-xs px-3 py-1.5 rounded-lg border border-slate-700 backdrop-blur-sm">
+              الأبعاد: <span id="dim-x" class="text-sky-400">0</span> × <span id="dim-y" class="text-sky-400">0</span> × <span id="dim-z" class="text-sky-400">0</span> مم
+            </div>
+          </div>
+
+          <!-- Upload Dropzone -->
+          <div class="p-6 bg-slate-50/50 border-t border-slate-100">
+            <label for="stl-file-input" class="group relative flex flex-col items-center justify-center p-6 border-2 border-dashed border-sky-300 hover:border-sky-500 rounded-xl bg-white hover:bg-sky-50/50 transition-all cursor-pointer">
+              <div class="w-12 h-12 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+              </div>
+              <p class="text-sm font-bold text-slate-700 group-hover:text-sky-600">اضغط لرفع ملف STL للطباعة</p>
+              <p class="text-xs text-slate-400 mt-1">يدعم ملفات STL فقط (الحجم الأقصى 50 ميجابايت)</p>
+              <input type="file" id="stl-file-input" accept=".stl" class="hidden" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Options & Calculator (5 cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-6">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 flex flex-col justify-between h-full">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 border-b pb-3 mb-5 flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-sky-600"></i> خيارات الطلب والحساب
+            </h3>
+
+            <!-- Material Selection -->
+            <div class="mb-5">
+              <label class="block text-sm font-bold text-slate-700 mb-2">اختر الخامة المطلوب بها الطباعة:</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="material-option cursor-pointer">
+                  <input type="radio" name="material" value="PLA" checked class="peer hidden" onchange="calculatePrice()">
+                  <div class="p-3 border-2 border-slate-200 peer-checked:border-sky-600 peer-checked:bg-sky-50 rounded-xl text-center transition-all">
+                    <span class="block font-bold text-slate-800 text-sm">PLA</span>
+                    <span class="text-xs text-slate-500">سهل وسلس ومثالي للمجسمات العامة</span>
+                  </div>
+                </label>
+                <label class="material-option cursor-pointer">
+                  <input type="radio" name="material" value="PETG" class="peer hidden" onchange="calculatePrice()">
+                  <div class="p-3 border-2 border-slate-200 peer-checked:border-sky-600 peer-checked:bg-sky-50 rounded-xl text-center transition-all">
+                    <span class="block font-bold text-slate-800 text-sm">PETG</span>
+                    <span class="text-xs text-slate-500">أكثر قوة ومتانة ومقاومة الحرارة</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Color Selection -->
+            <div class="mb-5">
+              <label class="block text-sm font-bold text-slate-700 mb-2">اختر اللون المطلوب:</label>
+              <div class="grid grid-cols-4 gap-2 mb-2">
+                <!-- White (Free +0) -->
+                <button type="button" onclick="selectColor('#ffffff', 'أبيض', 0)" class="color-btn ring-2 ring-sky-600 p-2 rounded-xl border border-slate-200 flex flex-col items-center gap-1 hover:shadow-md transition-all bg-slate-50">
+                  <span class="w-6 h-6 rounded-full border border-slate-300 bg-white shadow-inner"></span>
+                  <span class="text-[11px] font-bold text-slate-700">أبيض</span>
+                  <span class="text-[9px] text-emerald-600 font-bold">+0 ج</span>
+                </button>
+                <!-- Black (+1 EGP) -->
+                <button type="button" onclick="selectColor('#111827', 'أسود', 1)" class="color-btn p-2 rounded-xl border border-slate-200 flex flex-col items-center gap-1 hover:shadow-md transition-all bg-slate-50">
+                  <span class="w-6 h-6 rounded-full bg-slate-900 shadow-inner"></span>
+                  <span class="text-[11px] font-bold text-slate-700">أسود</span>
+                  <span class="text-[9px] text-sky-600 font-bold">+1 ج/جم</span>
+                </button>
+                <!-- Red (+1 EGP) -->
+                <button type="button" onclick="selectColor('#ef4444', 'أحمر', 1)" class="color-btn p-2 rounded-xl border border-slate-200 flex flex-col items-center gap-1 hover:shadow-md transition-all bg-slate-50">
+                  <span class="w-6 h-6 rounded-full bg-red-500 shadow-inner"></span>
+                  <span class="text-[11px] font-bold text-slate-700">أحمر</span>
+                  <span class="text-[9px] text-sky-600 font-bold">+1 ج/جم</span>
+                </button>
+                <!-- Blue (+1 EGP) -->
+                <button type="button" onclick="selectColor('#3b82f6', 'أزرق', 1)" class="color-btn p-2 rounded-xl border border-slate-200 flex flex-col items-center gap-1 hover:shadow-md transition-all bg-slate-50">
+                  <span class="w-6 h-6 rounded-full bg-blue-500 shadow-inner"></span>
+                  <span class="text-[11px] font-bold text-slate-700">أزرق</span>
+                  <span class="text-[9px] text-sky-600 font-bold">+1 ج/جم</span>
+                </button>
+              </div>
+              <p class="text-xs text-slate-500 flex items-center gap-1">
+                <i class="fa-solid fa-circle-info text-sky-600"></i> اللون الأبيض هو الأساس بدون تكلفة إضافية. اختيار لون آخر يضيف +1 ج للجرام.
+              </p>
+            </div>
+
+            <!-- Weight Override / Manual Input -->
+            <div class="mb-5">
+              <label class="block text-sm font-bold text-slate-700 mb-1">الوزن التقديري (بالجرام):</label>
+              <div class="relative">
+                <input type="number" id="weight-input" min="1" value="50" oninput="calculatePrice()" class="w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-xl p-3 pl-10 font-bold focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none">
+                <span class="absolute left-3 top-3 text-xs text-slate-400 font-bold">جرام</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">يتم احتساب الوزن تلقائياً من ملف الـ STL أو يمكنك تعديله يدوياً.</p>
+            </div>
+
+            <!-- Price Breakdown Box -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl p-4 mb-6 shadow-inner">
+              <div class="flex justify-between items-center text-xs text-slate-300 mb-1">
+                <span>سعر الجرام الأساسي:</span>
+                <span class="font-bold">3 جنيه / جرام</span>
+              </div>
+              <div class="flex justify-between items-center text-xs text-slate-300 mb-1">
+                <span>إضافة اللون المختارة:</span>
+                <span id="color-extra-label" class="font-bold text-amber-400">0 جنيه / جرام</span>
+              </div>
+              <div class="flex justify-between items-center text-xs text-slate-300 mb-3 border-b border-slate-700 pb-2">
+                <span>التكلفة الفعلية لكل جرام:</span>
+                <span id="rate-per-gram" class="font-bold text-sky-400">3 جنيه / جرام</span>
+              </div>
+              <div class="flex justify-between items-center text-lg font-black text-white">
+                <span>الإجمالي التقديري:</span>
+                <span class="text-2xl text-emerald-400" id="total-price">150 ج.م</span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="openOrderModal()" class="w-full bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-700 hover:to-blue-800 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cart-shopping"></i> متابعة وإرسال الطلب
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Checkout / Order Modal -->
+  <div id="order-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
+        <h3 class="font-bold text-lg flex items-center gap-2">
+          <i class="fa-solid fa-file-invoice text-sky-400"></i> إتمام الطلب - Nexus Tech
+        </h3>
+        <button onclick="closeOrderModal()" class="text-slate-400 hover:text-white text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-4 text-slate-800">
+        
+        <!-- Summary Badge -->
+        <div class="bg-sky-50 border border-sky-100 rounded-xl p-3 text-xs space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-600">الخامة واللون:</span>
+            <span id="summary-mat-color" class="font-bold text-slate-900">PLA - أبيض</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-600">الوزن الكلي:</span>
+            <span id="summary-weight" class="font-bold text-slate-900">50 جرام</span>
+          </div>
+          <div class="flex justify-between text-sm border-t border-sky-200 pt-1 mt-1">
+            <span class="font-bold text-slate-800">السعر النهائي:</span>
+            <span id="summary-price" class="font-extrabold text-emerald-600">150 ج.م</span>
+          </div>
+        </div>
+
+        <!-- Customer Form -->
+        <form id="order-form" onsubmit="submitOrder(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">اسم العميل بالكامل *</label>
+            <input type="text" id="cust-name" required placeholder="أدخل اسمك الكريم" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف / الواتساب *</label>
+            <input type="tel" id="cust-phone" required placeholder="01xxxxxxxxx" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">العنوان التفصيلي للشحن *</label>
+            <textarea id="cust-address" required rows="2" placeholder="المحافظة - المدينة - اسم الشارع - رقم المبنى" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-sky-500 outline-none"></textarea>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="pt-2">
+            <label class="block text-xs font-bold text-slate-700 mb-2">اختر طريقة الدفع *</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="cursor-pointer">
+                <input type="radio" name="payment_method" value="COD" checked class="peer hidden" onchange="togglePaymentUI()">
+                <div class="p-3 border-2 border-slate-200 peer-checked:border-sky-600 peer-checked:bg-sky-50 rounded-xl text-center">
+                  <i class="fa-solid fa-hand-holding-dollar text-slate-600 text-lg mb-1 block"></i>
+                  <span class="text-xs font-bold text-slate-800">دفع عند الاستلام</span>
+                </div>
+              </label>
+
+              <label class="cursor-pointer">
+                <input type="radio" name="payment_method" value="VodafoneCash" class="peer hidden" onchange="togglePaymentUI()">
+                <div class="p-3 border-2 border-slate-200 peer-checked:border-red-600 peer-checked:bg-red-50 rounded-xl text-center">
+                  <i class="fa-solid fa-mobile-screen-button text-red-600 text-lg mb-1 block"></i>
+                  <span class="text-xs font-bold text-slate-800">فودافون كاش</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Vodafone Cash Details Box -->
+          <div id="voda-cash-box" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 text-xs space-y-2">
+            <p class="font-bold text-red-900">تحويل فودافون كاش:</p>
+            <p class="text-slate-700">يرجى تحويل المبلغ كاملاً إلى الرقم التالي:</p>
+            <div class="flex items-center justify-between bg-white border border-red-300 rounded-lg p-2">
+              <span class="font-mono font-black text-red-600 text-sm tracking-wider">01067543967</span>
+              <button type="button" onclick="copyVodaNumber()" class="bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2.5 py-1 rounded">
+                <i class="fa-solid fa-copy ml-1"></i> نسخ
+              </button>
+            </div>
+            
+            <div class="pt-2">
+              <label class="block text-slate-800 font-bold mb-1">رفع إيصال التحويل (إجباري):</label>
+              <input type="file" id="voda-receipt" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer">
+            </div>
+          </div>
+
+          <button type="submit" id="submit-btn" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال الطلب الآن
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+      <p class="font-bold text-slate-300">Nexus Tech Company &copy; جميع الحقوق محفوظة 2026</p>
+      <p>أفضل جودة طباعة ثلاثية الأبعاد بأسرع وقت وأقل سعر في مصر</p>
+    </div>
+  </footer>
+
+  <!-- Application JavaScript Logic -->
+  <script>
+    // HARDCODED TELEGRAM CREDENTIALS
+    const TELEGRAM_CONFIG = {
+      botToken: '8841602195:AAGL6ClVEL_DWyUZ-DM78KpgPemHHLNTx-E',
+      chatId: '412459490'
+    };
+
+    // State Variables
+    let selectedColorName = 'أبيض';
+    let selectedColorHex = '#ffffff';
+    let colorExtraPerGram = 0;
+    let uploadedFileName = 'لم يتم رفع ملف (افتراضي)';
+    let scene, camera, renderer, controls, currentMesh;
+
+    // Initialize Three.js Scene
+    function init3D() {
+      const container = document.getElementById('canvas-container');
+      const canvas = document.getElementById('stl-canvas');
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0f172a); // slate-900
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(100, 100, 100);
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight1.position.set(1, 1, 1).normalize();
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0x0284c7, 0.5);
+      dirLight2.position.set(-1, -1, -1).normalize();
+      scene.add(dirLight2);
+
+      // Controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Responsive Resize
+      window.addEventListener('resize', () => {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+
+      animate();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (controls) controls.update();
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    // Color Selector
+    function selectColor(hex, name, extra) {
+      selectedColorHex = hex;
+      selectedColorName = name;
+      colorExtraPerGram = extra;
+
+      // Update UI classes
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-sky-600');
+      });
+      event.currentTarget.classList.add('ring-2', 'ring-sky-600');
+
+      // Update 3D Model Material Color
+      if (currentMesh) {
+        currentMesh.material.color.set(hex);
+      }
+
+      calculatePrice();
+    }
+
+    // Price Calculator
+    function calculatePrice() {
+      const weightInput = document.getElementById('weight-input');
+      let weight = parseFloat(weightInput.value) || 0;
+      if (weight < 0) weight = 0;
+
+      const baseRate = 3; // 3 EGP per gram
+      const effectiveRate = baseRate + colorExtraPerGram;
+      const totalPrice = weight * effectiveRate;
+
+      document.getElementById('color-extra-label').textContent = `${colorExtraPerGram} جنيه / جرام`;
+      document.getElementById('rate-per-gram').textContent = `${effectiveRate} جنيه / جرام`;
+      document.getElementById('total-price').textContent = `${totalPrice.toLocaleString()} ج.م`;
+    }
+
+    // STL File Handling
+    document.getElementById('stl-file-input').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      uploadedFileName = file.name;
+      document.getElementById('file-status').textContent = file.name;
+      document.getElementById('file-status').className = "text-xs px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 font-bold truncate max-w-[150px]";
+      document.getElementById('canvas-placeholder').classList.add('hidden');
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const contents = event.target.result;
+        const loader = new THREE.STLLoader();
+        const geometry = loader.parse(contents);
+
+        if (currentMesh) scene.remove(currentMesh);
+
+        geometry.computeBoundingBox();
+        const bbox = geometry.boundingBox;
+        const size = new THREE.Vector3();
+        bbox.getSize(size);
+
+        // Calculate approximate weight based on volume
+        const volumeCm3 = (size.x * size.y * size.z) / 1000;
+        const estimatedWeight = Math.max(5, Math.round(volumeCm3 * 0.35)); 
+        
+        document.getElementById('weight-input').value = estimatedWeight;
+
+        // Display Dimensions
+        document.getElementById('dim-x').textContent = Math.round(size.x);
+        document.getElementById('dim-y').textContent = Math.round(size.y);
+        document.getElementById('dim-z').textContent = Math.round(size.z);
+        document.getElementById('dims-badge').classList.remove('hidden');
+
+        // Center Geometry
+        geometry.center();
+
+        const material = new THREE.MeshStandardMaterial({
+          color: selectedColorHex,
+          roughness: 0.4,
+          metalness: 0.1
+        });
+
+        currentMesh = new THREE.Mesh(geometry, material);
+        scene.add(currentMesh);
+
+        // Adjust Camera
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 2.2;
+        camera.position.set(cameraZ, cameraZ, cameraZ);
+        camera.lookAt(0, 0, 0);
+        controls.target.set(0, 0, 0);
+
+        calculatePrice();
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+
+    // Toggle Payment Method UI
+    function togglePaymentUI() {
+      const method = document.querySelector('input[name="payment_method"]:checked').value;
+      const vodaBox = document.getElementById('voda-cash-box');
+      if (method === 'VodafoneCash') {
+        vodaBox.classList.remove('hidden');
+      } else {
+        vodaBox.classList.add('hidden');
+      }
+    }
+
+    function copyVodaNumber() {
+      navigator.clipboard.writeText('01067543967');
+      alert('تم نسخ رقم فودافون كاش: 01067543967');
+    }
+
+    // Modal Control
+    function openOrderModal() {
+      const mat = document.querySelector('input[name="material"]:checked').value;
+      const weight = document.getElementById('weight-input').value;
+      const totalPrice = document.getElementById('total-price').textContent;
+
+      document.getElementById('summary-mat-color').textContent = `${mat} - ${selectedColorName}`;
+      document.getElementById('summary-weight').textContent = `${weight} جرام`;
+      document.getElementById('summary-price').textContent = totalPrice;
+
+      document.getElementById('order-modal').classList.remove('hidden');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('order-modal').classList.add('hidden');
+    }
+
+    // Submit Order to Telegram Bot directly
+    async function submitOrder(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> جاري إرسال الطلب...';
+
+      const name = document.getElementById('cust-name').value;
+      const phone = document.getElementById('cust-phone').value;
+      const address = document.getElementById('cust-address').value;
+      const mat = document.querySelector('input[name="material"]:checked').value;
+      const weight = document.getElementById('weight-input').value;
+      const totalPrice = document.getElementById('total-price').textContent;
+      const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+      const paymentText = paymentMethod === 'COD' ? 'الدفع عند الاستلام' : 'فودافون كاش (01067543967)';
+
+      const message = `
+📦 *طلب طباعة 3D جديد - Nexus Tech*
+----------------------------------
+👤 *العميل:* ${name}
+📞 *الهاتف:* ${phone}
+📍 *العنوان:* ${address}
+----------------------------------
+⚙️ *المواصفات:*
+• *الملف:* ${uploadedFileName}
+• *الخامة:* ${mat}
+• *اللون:* ${selectedColorName}
+• *الوزن:* ${weight} جرام
+----------------------------------
+💰 *الإجمالي:* ${totalPrice}
+💳 *طريقة الدفع:* ${paymentText}
+      `;
+
+      try {
+        const url = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CONFIG.chatId,
+            text: message,
+            parse_mode: 'Markdown'
+          })
+        });
+
+        const data = await res.json();
+
+        // If Receipt Image Uploaded with Vodafone Cash
+        const receiptInput = document.getElementById('voda-receipt');
+        if (paymentMethod === 'VodafoneCash' && receiptInput.files[0]) {
+          const formData = new FormData();
+          formData.append('chat_id', TELEGRAM_CONFIG.chatId);
+          formData.append('caption', `إيصال تحويل فودافون كاش للعميل: ${name}`);
+          formData.append('photo', receiptInput.files[0]);
+
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+          });
+        }
+
+        if (data.ok) {
+          alert('🎉 تم إرسال طلبك بنجاح! سيتواصل معك فريق Nexus Tech القائم على التنفيذ فوراً.');
+          closeOrderModal();
+        } else {
+          alert('حدث خطأ أثناء إرسال الطلب عبر التليجرام: ' + data.description);
+        }
+      } catch (err) {
+        alert('تعذر الاتصال بالخادم. يرجى التأكد من الاتصال بالإنترنت.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> تأكيد وإرسال الطلب الآن';
+      }
+    }
+
+    // Initialize on Page Load
+    window.onload = function() {
+      init3D();
+      calculatePrice();
+    };
+  </script>
+</body>
+</html>
